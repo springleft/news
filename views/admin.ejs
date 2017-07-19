@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>后台管理</title>
+
+    <!-- Bootstrap -->
+    
+    <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+  <div class="container-fluid ">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">百度新闻后台管理器</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      
+      <form class="navbar-form navbar-left">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="搜索">
+        </div>
+        <button type="submit" class="btn btn-default">搜索</button>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">注册</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">登录 <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">个人中心</a></li>
+            <li><a href="#">账号设置</a></li>
+            <li><a href="#">会员开通</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">意见反馈</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+<div class="container">
+	<div class="row">
+				<div class="col-lg-6">
+					
+						<div class="panel panel-default">
+						  <!-- Default panel contents -->
+						  <div class="panel-heading"><h4><strong>新闻发布器</strong></h4></div>
+						  
+						<form action="/user/adduser" method="post" id="form">
+							 <h5>新闻标题</h5>
+							 <input type="text" name="title" id="title" class="form-control" />
+							 <h5>新闻正文</h5>
+							 <textarea name="text" id="text" class="form-control" rows="" cols=""></textarea>
+							 <h5>新闻图片地址</h5>
+							 <input type="text" name="address" id="address" class="form-control" />
+							 <h5>新闻来源</h5>
+							 <input type="text" name="source" id="source" class="form-control" />
+							  <h5>新闻日期</h5>
+							 <input type="date" name="date" id="date" class="form-control" />
+							 <h5>新闻标签</h5>
+							<select name="label" id="label" class="form-control">
+								<option value="推荐">推荐</option>
+								<option value="热点">热点</option>
+								<option value="科技">科技</option>
+								<option value="娱乐">娱乐</option>
+								<option value="社会">社会</option>
+							</select>
+							<button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="submit">提交</button>
+						</form>
+						
+						</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="panel panel-default">
+  <!-- Default panel contents -->
+					  <div class="panel-heading"><h4><strong>新闻列表</strong></h4></div>
+					
+					  <!-- Table -->
+					  <div id="box">
+					  	
+					  <table class="table table-hover">
+					    <thead>
+					    	<tr>
+					    		<th>新闻编号</th>
+					    		<th>新闻标题</th>
+					    		<th>新闻时间</th>
+					    		<th>操作</th>
+					    	</tr>
+					    </thead>
+						  <tbody id="list"></tbody>  
+					  </table>
+					  </div>
+					</div>
+				</div>
+	</div>
+	
+</div>
+			
+
+ <!--Modal--> 
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">提示框</h4>
+      </div>
+      <div class="modal-body">
+                      确定永久删除这条目录！！！
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="delete">确定</button>
+      </div>
+    </div>
+  </div>
+</div>	
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="jquery/dist/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="bootstrap/dist/js/bootstrap.min.js"></script>
+    
+    <script type="text/javascript">
+    	$(document).ready(function(){
+    		var getId;  //判断提交按钮
+    		
+				refresh();
+				function refresh(){
+					$('tbody>tr').remove();
+						$.ajax({
+    				type:"get",
+    				url:"/admin/getnews",
+    				success:function(data){      
+    				 for(var i=0;i<data.length;i++){
+    				 console.log(time)
+    				 	var time=data[i].date.split('T')[0];
+    				 	var tr=$('<tr></tr>');
+    				 	$('<td></td>').text(data[i].id).appendTo(tr);
+    				 	$('<td></td>').text(data[i].title).appendTo(tr);
+    				 	$('<td></td>').text(time).appendTo(tr);
+    				 	var btn=$('<button data-toggle="modal" data-target="#myModal"></button>').text('删除').addClass('btn btn-danger dropdown-toggle');
+    				 	var td=$('<td></td>');
+    				 	btn.appendTo(td);
+    				 	td.appendTo(tr);
+    				 	tr.appendTo($('tbody'));
+    				 }
+    				}
+    			});
+				}
+			    		
+//添加修改
+			$('#submit').click(function(e){
+					e.preventDefault();
+					
+					if(getId==null){
+         		//添加
+ 						$.ajax({
+    				type:"post",
+    				url:"/admin/addnews",
+		  			data:$('#form').serialize(),  //serialize() 方法通过序列化表单值，创建 URL 编码文本字符串。
+ 				    success:function(data){
+    						refresh();
+    				   }
+					  });
+					}else{
+            //修改
+            $.ajax({
+            	type:"put",
+            	url:"/admin/update",
+            	data:{
+            		id:getId,
+            		title:$('#title').val(),
+            		text:$('#text').val(),
+            		address:$('#address').val(),
+            		source:$('#source').val(),
+            		date:$('#date').val(),
+            		label:$('#label').val()
+            	},
+            	success:function(data){
+            		console.log(data);
+            		refresh();
+            		getId=null;
+            	}
+            })
+					}
+				 
+				});
+
+//  删除
+      $('#list').on('click','button',function(){
+    		 delid=$(this).parent().parent().children('td').eq(0).text();
+      });
+      
+        $('#delete').click(function(){
+        	
+				$.ajax({
+		        	url:"/admin/delete",
+		        	type:"delete",
+	            data:{
+	           		id:delid
+	            },
+	      	    success:function(data){
+	      	    	 refresh(); 	 
+	        	}       
+	        })
+				 $('#myModal').modal('hide');
+       });		
+       
+    //左右对应
+     $('#list').on('click','tr',function(){
+     	var showid=$(this).children('td').eq(0).text();
+     	   $.ajax({
+     	   	type:"get",
+     	   	url:"/admin/shownews",
+     	   	data:{
+     	   		id:showid
+     	   	},
+     	   	success:function(data){
+     	   	var time=data[0].date.split('T')[0];
+     	   		$('#title').val(data[0].title);
+     	   		$('#text').val(data[0].text);
+     	   		$('#address').val(data[0].address);
+     	   		$('#source').val(data[0].source);
+     	   		$('#date').val(time);
+     	   		$('#label').val(data[0].label);
+     	   		getId=data[0].id;
+     	   	}
+     	   });
+     	
+     })
+       
+    	});
+    </script>
+   
+
+  </body>
+</html>

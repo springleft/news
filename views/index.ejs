@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head lang="cn">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>移动主页</title>
+    <link rel="stylesheet" href="stylesheets/index.css" />
+</head>
+<body>
+  
+  <header>
+  	  <span>今日头条</span>
+  	  <input type="text" id="txt" value="搜索你感兴趣" />
+  </header>
+  
+  <div class="nav">
+	  	<ul id="nav-list">
+	  		<li class="on">推荐</li>
+	  		<li>热点</li>
+	  		<li>科技</li>
+	  		<li>娱乐</li>
+	  		<li>社会</li>
+	  	</ul>
+
+	 <div class="show" id="recommend">
+  		
+  		
+  		
+  	</div>
+  	<div id="hot">
+  		<div class="box" id="box">
+        <ul>
+        </ul>
+        <ol>
+        	<li class="on"></li>
+        	<li></li>
+        	<li></li>
+        </ol>
+    </div>
+
+  		
+  	</div>
+  	<div id="tv"></div>
+  	<div id="inter"></div>
+  	<div id="socie"></div>
+  </div>
+  
+  
+  <script src="jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript">
+ 
+  	//搜索框焦点获取
+     $('#txt').focus(function(){
+     	$('#txt').val('');
+     })
+      $('#txt').blur(function(){
+     	$('#txt').val('搜索你感兴趣');
+     })
+      //轮播图
+      var iNow=0;
+      //拖拽
+      var oBox=document.getElementById('box');
+	  var oUl=oBox.children[0];
+      oUl.onmousedown=function (ev){
+		var oldX=ev.clientX-oUl.offsetLeft;
+		var disX=ev.clientX;
+		document.onmousemove=function (ev){
+			var l=ev.clientX-oldX;
+			
+			oUl.style.left=l+'px';
+		};
+		document.onmouseup=function (ev){
+			document.onmousemove=null;
+			
+			if(Math.abs(ev.clientX-disX)>20){
+				if(disX-ev.clientX>0){
+					iNow++;
+					if(iNow==3){
+						iNow=1;
+					}
+				}else{
+					iNow--;
+					if(iNow==-1){
+						iNow=0;
+					}
+				}
+			}
+			
+			tab();
+		};
+		return false;
+	};
+
+      
+      
+	function tab(){
+		$('ol li').removeClass('on');
+		$('ol li').eq(iNow).addClass('on');
+		
+		$('ul').animate({
+			left:-iNow*5.6+'rem'
+		});
+	}
+	
+	$('ol li').click(function (){
+		iNow=$(this).index();
+		tab();
+	});
+	function next(){
+		iNow++;
+		if(iNow==$('ol li').length){
+			iNow=0;
+		}
+		tab();
+	}
+	
+	var timer=setInterval(next,2000);
+	
+	$('.box').mouseover(function (){
+		clearInterval(timer);
+	});
+	
+	$('.box').mouseout(function (){
+		timer=setInterval(next,2000);
+	});
+
+      //选项卡
+      $('ul li').click(function(){
+      	$('ul>li').removeClass('on');
+      	$(this).addClass('on');
+      	$('.nav>div').removeClass('show');
+      	$('.nav>div').eq($(this).index()).addClass('show');
+      })
+      //ajax数据传输
+      $.ajax({
+      	url:"/admin/thatnews",
+      	type:"get",
+      	data:{label:'推荐'},
+      	success:function(data){
+         for(var i=0;i<data.length;i++){
+      		    var p=$('<p></p>').appendTo('#recommend');
+    			$('<span></span>').text(data[i].title).appendTo(p);
+    			$('<span></span>').text(data[i].text).appendTo(p);
+    			$('<img src="'+data[i].address+'" />').appendTo(p);
+    			$('<span></span>').text(data[i].source).appendTo(p);
+    			$('<span></span>').text(data[i].date.split('T')[0]).appendTo(p);
+    			}
+      	}
+      })
+      
+      $.ajax({
+      	url:"/admin/thatnews",
+      	type:"get",
+      	data:{label:"热点"},
+      	success:function(data){
+//    		console.log($("li"));
+         for(var i=0;i<3;i++){
+         	var li=$('<li></li>').appendTo('.box ul');
+         	  $('<img src="'+data[i].address+'" />').appendTo(li);
+         	  $('<span></span>').text(data[i].title).appendTo(li);
+         	  console.log(data[i].title)
+    			}
+         if(data.length>3){
+         	for( var i=3;i<data.length;i++){
+         var p=$('<p></p>').appendTo('#hot');
+    			$('<span></span>').text(data[i].title).appendTo(p);
+    			$('<span></span>').text(data[i].text).appendTo(p);
+    			$('<img src="'+data[i].address+'" />').appendTo(p);
+    			$('<span></span>').text(data[i].source).appendTo(p);
+    			$('<span></span>').text(data[i].date.split('T')[0]).appendTo(p);
+    			
+    			}
+    			}
+      	}
+      })
+      
+       $.ajax({
+      	url:"/admin/thatnews",
+      	type:"get",
+      	data:{label:"科技"},
+      	success:function(data){
+         for(var i=0;i<data.length;i++){
+      		    var p=$('<p></p>').appendTo('#tv');
+    			$('<span></span>').text(data[i].title).appendTo(p);
+    			$('<span></span>').text(data[i].text).appendTo(p);
+    			$('<img src="'+data[i].address+'" />').appendTo(p);
+    			$('<span></span>').text(data[i].source).appendTo(p);
+    			$('<span></span>').text(data[i].date.split('T')[0]).appendTo(p);
+    			}
+      	}
+      })
+       
+        $.ajax({
+      	url:"/admin/thatnews",
+      	type:"get",
+      	data:{label:"娱乐"},
+      	success:function(data){
+         for(var i=0;i<data.length;i++){
+      		    var p=$('<p></p>').appendTo('#inter');
+    			$('<span></span>').text(data[i].title).appendTo(p);
+    			$('<span></span>').text(data[i].text).appendTo(p);
+    			$('<img src="'+data[i].address+'" />').appendTo(p);
+    			$('<span></span>').text(data[i].source).appendTo(p);
+    			$('<span></span>').text(data[i].date.split('T')[0]).appendTo(p);
+    			}
+      	}
+      })
+        
+        $.ajax({
+      	url:"/admin/thatnews",
+      	type:"get",
+      	data:{label:"社会"},
+      	success:function(data){
+         for(var i=0;i<data.length;i++){
+      		    var p=$('<p></p>').appendTo('#socie');
+    			$('<span></span>').text(data[i].title).appendTo(p);
+    			$('<span></span>').text(data[i].text).appendTo(p);
+    			$('<img src="'+data[i].address+'" />').appendTo(p);
+    			$('<span></span>').text(data[i].source).appendTo(p);
+    			$('<span></span>').text(data[i].date.split('T')[0]).appendTo(p);
+    			}
+      	}
+      })
+  </script>
+  
+  
+  
+  
+  
+    <script type="text/javascript">
+        ;(function(win,doc){
+        	function changeSize(){    		doc.documentElement.style.fontSize=50*doc.documentElement.clientWidth/320+'px';	}
+        	changeSize();
+        	win.addEventListener('resize',changeSize);
+        })(window,document);
+    </script>
+</body>
+</html>
